@@ -29,6 +29,10 @@ const adSchema = new mongoose.Schema({
     type: String,
     require: true
   },
+  imageURL: {
+    type: String,
+    required: false
+  },
   description: {
     type: String,
     required: true
