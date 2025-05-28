@@ -5,6 +5,30 @@ const adSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  artist: {
+    type: String,
+    required: true
+  },
+  genre: {
+    type: String,
+    required: true
+  },
+  age: {
+    type: String,
+    required: true
+  },
+  location: {
+    type: String,
+    required: true
+  },
+  date: {
+     type: String,
+     required: true
+  },
+  time: {
+    type: String,
+    require: true
+  },
   description: {
     type: String,
     required: true
