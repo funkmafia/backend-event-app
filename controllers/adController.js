@@ -33,6 +33,12 @@ exports.addAd = async (req, res) => {
 
   const ad = new Ad({
     title: req.body.title,
+    artist: req.body.artist,
+    genre: req.body.genre,
+    age: req.body.age,
+    location: req.body.location,
+    date: req.body.date,
+    time: req. body.time,
     description: req.body.description,
     price: req.body.price,
     userId: userInDB._id,
