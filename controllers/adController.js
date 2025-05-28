@@ -39,6 +39,7 @@ exports.addAd = async (req, res) => {
     location: req.body.location,
     date: req.body.date,
     time: req. body.time,
+    imageURL: req.body.imageURL,
     description: req.body.description,
     price: req.body.price,
     userId: userInDB._id,
