@@ -51,3 +51,27 @@ exports.addAd = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+// Update
+exports.updateAd = async (req, res) => {
+  console.log("updateAd");
+  try {
+    const ad = await Ad.findByIdAndUpdate(user_id, req.body, {
+      new: true, runValidators: true
+    });
+    if (!ad) return res.status(404).json({ message: 'Ad not found' });
+    res.json();
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
+
+// Delete
+exports.deleteAd= async (req, res) => {
+  try {
+    const ad = await Ad.findByIdAndDelete(req.params.id);
+    if (!ad) return res.status(404).json({ message: 'Ad not found' });
+    res.json(ad);
+  } catch {
+    res.status(400).json({ message: 'Invalid entry' });
+  }
+};
