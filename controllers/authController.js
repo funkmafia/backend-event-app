@@ -4,7 +4,11 @@ exports.register = async (req, res) => {
   const { name, email, password } = req.body;
   
   try {
-    const user = new User({ name, email, password });
+    const userExists = await User.exists({ email });
+    if (userExists) {
+      return res.status(400).send({message: "You are already registered, please log in"})
+          } 
+     const user = new User({ name, email, password });
     const token = new Date().getTime().toString() + Math.random().toString(36).substring(2, 15);
     user.token = token;
     await user.save();
