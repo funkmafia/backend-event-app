@@ -6,7 +6,7 @@ exports.register = async (req, res) => {
   try {
     const userExists = await User.exists({ email });
     if (userExists) {
-      return res.status(400).send({message: "You are already registered, please log in"})
+      return res.status(400).json({message: "You are already registered, please log in"})
           } 
      const user = new User({ name, email, password });
     const token = new Date().getTime().toString() + Math.random().toString(36).substring(2, 15);
@@ -37,6 +37,21 @@ exports.login = async (req, res) => {
 
     
     res.json({ token: token });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+exports.logout = async(req, res) => {
+  try{
+    const token = req.body.token;
+    if(!token) {
+      return res.status(400).json({ message: "Token is required for logout."});
+    }
+    const user = await User.findOneAndUpdate({ token: token }, { token: '' });
+   if(!user) {
+    return res.status(400).json({ message: "Invalid token or user not found"});
+   }
+   res.json({message: "Logged out successfully."})
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
