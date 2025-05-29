@@ -53,9 +53,24 @@ exports.addAd = async (req, res) => {
 };
 // Update
 exports.updateAd = async (req, res) => {
-  console.log("updateAd");
+  //   const userToken = req.headers.authorization.split(" ")[1];
+
+  // console.log(userToken);
+
+  // if (!userToken) {
+  //   return res.status(401).json({ message: "Unauthorized" });
+  // }
+
+  // const userInDB = await User.findOne({ token: userToken });
+
+  // console.log(userInDB);
+
+  // if (!userInDB) {
+  //   return res.status(401).json({ message: "Unauthorized" });
+  // }
+  
   try {
-    const ad = await Ad.findByIdAndUpdate(user_id, req.body, {
+    const ad = await Ad.findByIdAndUpdate(req.params.id, req.body, {
       new: true, runValidators: true
     });
     if (!ad) return res.status(404).json({ message: 'Ad not found' });
@@ -63,12 +78,12 @@ exports.updateAd = async (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-}
+ }
 
 // Delete
 exports.deleteAd= async (req, res) => {
   try {
-    const ad = await Ad.findByIdAndDelete(req.params.id);
+    const ad = await Ad.findByIdAndDelete(user._id);
     if (!ad) return res.status(404).json({ message: 'Ad not found' });
     res.json(ad);
   } catch {
