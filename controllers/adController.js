@@ -53,40 +53,63 @@ exports.addAd = async (req, res) => {
 };
 // Update
 exports.updateAd = async (req, res) => {
-  //   const userToken = req.headers.authorization.split(" ")[1];
-
-  // console.log(userToken);
-
-  // if (!userToken) {
-  //   return res.status(401).json({ message: "Unauthorized" });
-  // }
-
-  // const userInDB = await User.findOne({ token: userToken });
-
-  // console.log(userInDB);
-
-  // if (!userInDB) {
-  //   return res.status(401).json({ message: "Unauthorized" });
-  // }
-  
   try {
+    const userToken = req.headers.authorization.split(" ")[1];
+
+  if (!userToken) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const userInDB = await User.findOne({ token: userToken });
+
+  if (!userInDB) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const oldAd = await Ad.findById(req.params.id);
+  if (!oldAd) return res.status(404).json({ message: "Ad not found"});
+  if (oldAd.userId.toString() !== userInDB._id.toString()){
+    return res.status(403).json({ message: "You can only update your own ads."})
+  }
+  
+  
     const ad = await Ad.findByIdAndUpdate(req.params.id, req.body, {
       new: true, runValidators: true
     });
     if (!ad) return res.status(404).json({ message: 'Ad not found' });
-    res.json();
+    
+    res.json(ad);
   } catch (err) {
+    console.error("Update error:", err);
     res.status(400).json({ error: err.message });
   }
  }
 
 // Delete
-exports.deleteAd= async (req, res) => {
+exports.removeAd= async (req, res) => {
   try {
-    const ad = await Ad.findByIdAndDelete(user._id);
+ const userToken = req.headers.authorization.split(" ")[1];
+
+  if (!userToken) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const userInDB = await User.findOne({ token: userToken });
+
+  if (!userInDB) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const oldAd = await Ad.findById(req.params.id);
+  if (!oldAd) return res.status(404).json({ message: "Ad not found"});
+  if (oldAd.userId.toString() !== userInDB._id.toString()){
+    return res.status(403).json({ message: "You can only delete your own ads."})
+  }
+  
+
+    const ad = await oldAd.deleteOne();
     if (!ad) return res.status(404).json({ message: 'Ad not found' });
-    res.json(ad);
-  } catch {
+    res.json(oldAd);
+  } catch (err) {
+    console.error("Error in removeAd:", err);
     res.status(400).json({ message: 'Invalid entry' });
   }
 };
