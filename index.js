@@ -7,12 +7,21 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
+const allowedOrigins = ["https://event-app-liart-eta.vercel.app"];
+
 app.use(
   cors({
-    origin: "https://event-app-liart-eta.vercel.app",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed for this origin"));
+      }
+    },
     credentials: true,
   })
 );
+
 app.use(express.json());
 
 // Connect to MongoDB
